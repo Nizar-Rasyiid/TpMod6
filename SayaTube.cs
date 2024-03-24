@@ -5,11 +5,7 @@ public class SayaTubeVideo
     private int id;
     private string title;
     private int playCount;
-
-    public int getPlayCount(int playCount)
-    {
-        return playCount;
-    }
+    { set; get; }
     public SayaTubeVideo(string title)
     {
         Random random = new Random();
@@ -18,13 +14,12 @@ public class SayaTubeVideo
         playCount = 0;
     }
 
-
-    public void IncreasePlayCount(int playCount)
+    public increasePlayCount(int playCount)
     {
-        this.playCount += playCount;
+        playCount++;
     }
 
-    public void PrintVideoDetails()
+    public PrintVideoDetails()
     {
         Console.WriteLine("Video Details:");
         Console.WriteLine("ID: " + id);
@@ -38,7 +33,7 @@ class Program
     public static void Main(string[] args)
     {
         SayaTubeVideo video = new SayaTubeVideo("Tutorial Design By Contract - NIZAR RASYIID");
-        video.IncreasePlayCount(2000);
+        video.increasePlayCount(10);
         video.PrintVideoDetails();
     }
 }
