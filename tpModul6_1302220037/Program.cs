@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 
 public class SayaTubeVideo
 {
@@ -8,34 +9,54 @@ public class SayaTubeVideo
 
     public SayaTubeVideo(string title)
     {
-        if (string.IsNullOrEmpty(title) || title.Length > 100 )
+       Contract.Requires(title.Length < 100 || title != null);
+        try
         {
-            throw new ArgumentException("Title Tidak Boleh NULL dan Lebih dari 100 karakter");
+            checked
+            {
+                if (title == null)
+                {
+                    throw new ArgumentNullException(nameof(title));
+                }else if (title.Length > 100)
+                {
+                    throw new ArgumentOutOfRangeException("Tidak Boleh Lebih Dari 100");
+                }
+            }
+        }catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
         }
         Random random = new Random();
         id = random.Next(10000, 100000);
         this.title = title;
         playCount = 0;
+        Contract.Ensures(this.title.Length < 100 && title  != null);
     }
 
 
     public void IncreasePlayCount(int playCount)
     {
-        if (playCount > 10000000)
+        if (this.title != null)
         {
-            throw new ArgumentOutOfRangeException("Pemanggilan Tidak Boleh Di atas 10.000.000");
-        }
-        try
-        {
-            checked
+            Contract.Requires(!string.IsNullOrEmpty(this.title));
+            try
             {
-                this.playCount += playCount;
+                checked
+                {
+                    if (this.playCount + playCount > 10000000)
+                    {
+                        throw new OverflowException("Over dari 10.000.000");
+                    }
+                    this.playCount += playCount;
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            Contract.Ensures(this.playCount < 10000000);
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-        }
+
     }
 
     public void PrintVideoDetails()
@@ -51,6 +72,7 @@ class Program
 {
     public static void Main(string[] args)
     {
+
 
         //Test Title
         try
